@@ -62,7 +62,8 @@ var app = http.createServer(function(request,response){
                 var list = templeteList(fileList);
                 var templete = templeteHTML(title, list,
                      `<h2>${title}</h2>${description}`,
-                     `<a href="/create">create</a>`);
+                     `<a href="/create">create</a>
+                     <a href="C:\Users\tmdwn\Downloads\포포몬 2022-07-11 10-57-50\포포몬 2022-07-11 10-57-50\Apps\포포몬.ipa">install</a>`);
                 response.writeHead(200);
                 response.end(templete);
             });
