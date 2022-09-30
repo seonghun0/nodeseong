@@ -24,6 +24,9 @@ function LandingPage() {
   const onRegistkHandler = () =>{
     navigate('/RegisterPage')
   }
+  const onVideoUploadHandler = () =>{
+    navigate('/VideoUploadPage')
+  }
 
   return (
     <div style={{
@@ -43,7 +46,10 @@ function LandingPage() {
       <button onClick={onRegistkHandler}>
         회원가입
       </button>
-
+      <br/>
+      <button onClick={onVideoUploadHandler}>
+        비디오 업로드
+      </button>
     </div>
   )
 }

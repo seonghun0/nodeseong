@@ -4,9 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
+var fs = require('fs');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var videoRouter = require('./routes/video');
 
 const config = require('./config/key')
 
@@ -28,6 +30,9 @@ app.use(bodyParser.json());
 
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/video', videoRouter);
+
+app.use('/uploads', express.static('uploads'));
 
 app.get('/api/hello', (req,res)=>{
   res.send("안녕하세요")
@@ -52,6 +57,7 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 
 const mongoose = require('mongoose');
+const { appendFileSync } = require('fs');
 mongoose.connect(config.mongoURI)
   .then(()=>console.log('MongoDB connexted...'))
   .catch( err => console.log(err));
