@@ -4,6 +4,8 @@ import { Typography, Button, Form, message, Input } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import Dropzone from "react-dropzone";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Title = Typography;
 const TextArea = Input;
@@ -22,6 +24,7 @@ const CategoryOptions = [
 ];
 
 function VideoUploadPage() {
+  const user = useSelector(state => state.user);
   const [VideoTitle, setVideoTitle] = useState("");
   const [Description, setDescription] = useState("");
   const [Private, setPrivate] = useState(0);
@@ -29,6 +32,8 @@ function VideoUploadPage() {
   const [FIlePath, setFIlePath] = useState("");
   const [Duration, setDuration] = useState("");
   const [ThumbnailPath, setThumbnailPath] = useState("");
+
+  var navigate = new useNavigate();
 
   const onTitleHandler = (e) => {
     setVideoTitle(e.target.value);
@@ -90,6 +95,38 @@ function VideoUploadPage() {
       })
   };
 
+  const onSubmit = (e) =>{
+    e.preventDefault();
+
+    const variable = {
+      writer:user.register._id,
+      title:VideoTitle,
+      description:Description,
+      privacy:Private,
+      filePath:FIlePath,
+      category:Category,
+      duratinon:Duration,
+      thumbnail:ThumbnailPath,      
+    }
+    console.log(variable);
+    axios.post('/api/video/uploadVideo', variable)
+      .then(res =>{
+        if(res.data.success){
+          
+          message.success('성공적으로 업로드를 했습니다.')
+
+          setTimeout(function(){
+            navigate('/')
+          },3000)
+
+        }else{
+          alert('비디오 업로드에 실패했습니다.');
+        }
+      })
+
+  }
+
+
   return (
     <div style={{ maxWidth: "700px", margin: "2rem auto" }}>
       <div
@@ -101,7 +138,7 @@ function VideoUploadPage() {
       <div style={{ textAlign: "center", marginBottom: "2rem" }}>
         <Title level={2}> Upload Video</Title>
       </div>
-      <Form onSubmit>
+      <Form onSubmit={onSubmit}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           {/* 드랍존 */}
           <Dropzone 
@@ -151,6 +188,8 @@ function VideoUploadPage() {
             );
           })}
         </select>
+        <br />
+        <br />
         <select onChange={onCategoryHandler}>
           {CategoryOptions.map((val, key) => {
             return (
@@ -160,7 +199,9 @@ function VideoUploadPage() {
             );
           })}
         </select>
-        <Button type="primary" size="large"></Button>
+        <br />
+        <br />
+        <Button type="primary" size="large" onClick={onSubmit}>Submit</Button>
       </Form>
     </div>
   );
