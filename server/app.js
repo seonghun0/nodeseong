@@ -9,6 +9,7 @@ var fs = require('fs');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var videoRouter = require('./routes/video');
+var subscribeRouter = require('./routes/subscribe');
 
 const config = require('./config/key')
 
@@ -31,6 +32,7 @@ app.use(bodyParser.json());
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/video', videoRouter);
+app.use('/api/subscribe', subscribeRouter);
 
 app.use('/uploads', express.static('uploads'));
 

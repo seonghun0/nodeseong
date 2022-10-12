@@ -6,6 +6,7 @@ import Dropzone from "react-dropzone";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import NavBar from "../NavBar/NavBar";
 
 const Title = Typography;
 const TextArea = Input;
@@ -105,7 +106,7 @@ function VideoUploadPage() {
       privacy:Private,
       filePath:FIlePath,
       category:Category,
-      duratinon:Duration,
+      duration:Duration,
       thumbnail:ThumbnailPath,      
     }
     console.log(variable);
@@ -129,6 +130,7 @@ function VideoUploadPage() {
 
   return (
     <div style={{ maxWidth: "700px", margin: "2rem auto" }}>
+      <NavBar/>
       <div
         style={{ textAlign: "left", marginBottom: "2rem" }}
         onClick={onBackButtonClickHandler}

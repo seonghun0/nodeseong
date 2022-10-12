@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const multer = require('multer');
 const { Video } = require('./../models/Video');
+const { Subscriber } = require('./../models/Subscriber');
 var ffmpeg = require('fluent-ffmpeg');
 
 //multer options
@@ -87,6 +88,61 @@ router.post('/uploadVideo', (req, res)=>{
         res.status(200).json({success:true})
     })
     
+
+})
+
+//비디오를 db에서 가져와서 클라이언트에 보낸다.
+router.get('/getVideos', (req, res)=>{
+
+    Video.find()
+        .populate('writer')
+        .exec((err, videos)=>{
+            if(err) return res.status(400).send(err)
+            
+            res.status(200).json({success : true, videos})
+        })
+
+})
+
+router.post('/getVideoDetail',(req,res)=>{
+    Video.findOne({'_id': req.body.videoId})
+        .populate('writer')
+        .exec((err, videoDetail)=>{
+            if(err) return res.status(400).send(err)
+
+            res.status(200).json({success : true , videoDetail})
+        })
+})
+
+router.post('/getSubscriptionVideos', (req, res)=>{
+
+    //자신의 아이디를 가지고 구독하는 리스트 가져오기
+    Subscriber.find({userFrom:req.body.userFrom})
+        .exec((err, subscribeInfo)=>{
+            if(err) return res.status(400).send(err)
+            
+            let subscriberUsers = [];
+
+            subscribeInfo.map((subscriber, i)=>{
+                subscriberUsers.push(subscriber.userTo);
+            })
+
+            //리스트의 비디오를 가져온다.
+
+            Video.find({writer : {$in: subscriberUsers}})
+                .populate('writer')
+                .exec((err, videos)=>{
+                    if(err) return res.status(400).send(err)
+
+                    res.status(200).json({success:true, videos})
+
+                })
+            
+
+
+        })
+
+
 
 })
 

@@ -9,6 +9,8 @@ import LandingPage from './components/views/LandingPage/LandingPage';
 import LoginPage from './components/views/LoginPage/LoginPage';
 import RegisterPage from './components/views/RegisterPage/RegisterPage';
 import VideoUploadPage from './components/views/VideoUploadPage/VideoUploadPage';
+import VideoDetailPage from './components/views/VideoDetailPage/VideoDetailPage';
+import SubscriptionPage from './components/views/SubscriptionPage/SubscriptionPage';
 
 function App() {
   return (
@@ -18,7 +20,9 @@ function App() {
         <Route path="/" element={<LandingPage/>} />
         <Route path="/LoginPage" element={<LoginPage/>} />
         <Route path="/RegisterPage" element={<RegisterPage/>} />
-        <Route path="/VideoUploadPage" element={<VideoUploadPage/>} />       
+        <Route path="/video/Upload" element={<VideoUploadPage/>} />       
+        <Route path="/video/:videoId" element={<VideoDetailPage/>} />
+        <Route path="/subscription" element={<SubscriptionPage/>} />
       </Routes>
       </div>
   </Router>
