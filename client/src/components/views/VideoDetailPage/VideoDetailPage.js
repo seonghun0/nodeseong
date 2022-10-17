@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import SideVideo from './Sections/SideVideo';
 import Subscribe from './Sections/Subscribe';
 import NavBar from '../NavBar/NavBar';
+import Comment from './Sections/Comment';
 
 function VideoDetailPage(props) {
 
@@ -13,24 +14,42 @@ function VideoDetailPage(props) {
     const variable = {videoId : videoId}
     
     const [VideoDetail, setVideoDetail] = useState([]);
+    const [Comments , setComments] = useState([]);
     
     useEffect(()=>{
         axios.post('/api/video/getVideoDetail', variable)
             .then((res=>{
                 if(res.data.success){
                     setVideoDetail(res.data.videoDetail)
-                    console.log(res.data.videoDetail)
                 }else{
                     alert('비디오 가져오기 실패했습니다.')
                 }
             }))
+
+        axios.post('/api/comment/getComment', variable)
+            .then(res=>{
+                if(res.data.success){
+                    setComments(res.data.comments)
+                    console.log(res.data.comments)
+                }else{
+                    alert('댓글 데이터를 가져오지 못 하였습니다.')
+                }
+            })
+        
     },[])
 
     const onBackButtonClickhandler=(e)=>{
         window.history.back()
     }
 
+    const refreshFunction=(newComment)=>{
+        setComments(Comments.concat(newComment));
+    }
+
     if(VideoDetail.writer){
+
+        const subscribeButton = VideoDetail.writer._id !== localStorage.getItem('userId') && <Subscribe userTo={VideoDetail.writer._id} userFrom={localStorage.getItem('userId')}/>
+
         return (
           <div style={{padding:"2rem 2rem"}}>
             <NavBar/>
@@ -41,7 +60,7 @@ function VideoDetailPage(props) {
                           <video style={{width:'100%'}} src={`http://localhost:5000/${VideoDetail.filePath}`} controls/>
                       </div>
                       <List.Item
-                          actions={[<Subscribe userTo={VideoDetail.writer._id} userFrom={localStorage.getItem('userId')}/>]}
+                          actions={subscribeButton}
                       >
                           <List.Item.Meta
                               avatar={<Avatar src={VideoDetail.writer.image} />}
@@ -51,6 +70,7 @@ function VideoDetailPage(props) {
       
                       </List.Item>
                       {/* Comment */}
+                      <Comment refreshFunction={refreshFunction} commentLists={Comments} postId={videoId}/>
                   </Col>
                   <Col lg={6} xs={24}>
                     <SideVideo />
